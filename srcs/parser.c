@@ -1,17 +1,34 @@
 #include "libft.h"
 #include <stdio.h>
+#include <math.h>
 
-char		*parse_data(int fd, char *line)
+int		bin_to_dec(char *bin)
+{
+	int	binary[6];
+	int	pwr = 5;
+	int	res = 0;
+	
+	for (int i = 0; i <= 5; i++)
+	{
+		binary[i] = bin[i] - 48;
+		res = res + (binary[i] * pow(2, pwr));
+		pwr--;
+	}
+	return(0);
+}
+
+int		**parse_data(int fd, char *line)
 {
 	int		line_c;
 	int		i;
 	int		j;
 	char		*tmp;
 	char		*res;
-	char		*binary;
+	int		**decimals;
 
-	binary = (char *)malloc(sizeof(char) * 400);
-	ft_bzero(binary, 400);
+	decimals = (int **)malloc(sizeof(int *) * 6);
+	for (int c = 0; c <= 6; c++)
+		decimals[c] = (int *)malloc(sizeof(int) * 6);
 	while ((get_next_line(fd, &line)))
 	{
 		line_c = 0;
@@ -33,28 +50,25 @@ char		*parse_data(int fd, char *line)
 				}
 				i++;
 			}
-			binary = ft_strcat(binary, res);
-			binary = ft_strcat(binary, "\n");
+			bin_to_dec(res);
 			free(res);
 			line_c += 12;
 		}
 		free(line);
 	}
-	return(binary);
+	return(decimals);
 }	
 
 int		main(int argc, char **argv)
 {
 	int		fd;
 	char		*line;
-	char		*binary;
+	int		**decimals;
 
 	if (argc != 2)
 		exit(0);
 	fd = open(argv[1], O_RDONLY);
-	binary = parse_data(fd, line);
-	printf("%s", binary);
-	free(binary);
+	decimals = parse_data(fd, line);
 	close(fd);
 	return(0);
 }
