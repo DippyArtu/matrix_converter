@@ -5,7 +5,7 @@
 
 <h2 id="matrix-converter">Matrix Converter</h2>
 <p>This is a small utility program I wrote for my design project.</p>
-<p>As an argument, this program will take a file, containing a 36x36 matrix, consisting of 1 (ones) and 0 (zeros), parse it to retrieve a list of 6 digit binary numbers, convert those numbers into decimal format and write it to the output file as a 6x6 matrix.</p>
+<p>As an argument, this program will take a file, containing a 36x36 matrix, consisting of 1 (ones) and 0 (zeros), parse it to retrieve a list of 6 digit binary numbers, convert those numbers into decimal format and write it to the output file as a 6 6x6 matrices.</p>
 <h2 id="how-to-use">How to use</h2>
 <ul>
 <li>
