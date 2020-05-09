@@ -1,14 +1,33 @@
 #include "libft.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
-int		bin_to_dec(char *bin)
+static void		free_matrix(int **m)
+{
+	for (int i = 0; i < 6; i++)
+		free(m[i]);
+	free(m);
+	m = NULL;
+}
+
+static int		**alloc_matrix(void)
+{
+	int		**decimals;
+
+	decimals = (int **)malloc(sizeof(int *) * 6);
+	for (int i = 0; i < 6; i++)
+		decimals[i] = (int *)malloc(sizeof(int) * 6);
+	return(decimals);
+}
+
+static int		bin_to_dec(char *bin)
 {
 	int	binary[6];
 	int	pwr = 5;
 	int	res = 0;
 	
-	for (int i = 0; i <= 5; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		binary[i] = bin[i] - 48;
 		res = res + (binary[i] * pow(2, pwr));
@@ -17,7 +36,7 @@ int		bin_to_dec(char *bin)
 	return(0);
 }
 
-int		**parse_data(int fd, char *line)
+static int		**parse_data(int fd, char *line)
 {
 	int		line_c;
 	int		i;
@@ -26,9 +45,7 @@ int		**parse_data(int fd, char *line)
 	char		*res;
 	int		**decimals;
 
-	decimals = (int **)malloc(sizeof(int *) * 6);
-	for (int c = 0; c <= 6; c++)
-		decimals[c] = (int *)malloc(sizeof(int) * 6);
+	decimals = alloc_matrix();
 	while ((get_next_line(fd, &line)))
 	{
 		line_c = 0;
@@ -52,10 +69,13 @@ int		**parse_data(int fd, char *line)
 			}
 			bin_to_dec(res);
 			free(res);
+			free(tmp);
 			line_c += 12;
 		}
 		free(line);
 	}
+	free(line);
+	line = NULL;
 	return(decimals);
 }	
 
@@ -69,6 +89,7 @@ int		main(int argc, char **argv)
 		exit(0);
 	fd = open(argv[1], O_RDONLY);
 	decimals = parse_data(fd, line);
+	free_matrix(decimals);
 	close(fd);
 	return(0);
 }

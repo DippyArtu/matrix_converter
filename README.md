@@ -22,6 +22,4 @@
 <p>Results will be written into the <em>result.txt</em> file</p>
 </li>
 </ul>
-<h2 id="small-warning">Small Warning</h2>
-<p>I didn’t bother solving memory leaks, but because this program doesn’t handle great ammount of data, it shouldn’t be a problem. Just giving you a heads up.</p>
 
