@@ -10,7 +10,7 @@
 <p><em><strong>Clarification:</strong></em>	<br>
 <em>for 6 6x6 matrices</em></p>
 <pre><code>res -- resulting matrix							//2d matrix
-in --  input array of matrices								//3d matrix
+in --  input array of matrices							//3d matrix
 
 res[i][j] = ((in[n][i][1] + .... + in[n][i][6]) / 6)					//mean value
 </code></pre>
