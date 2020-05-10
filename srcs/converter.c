@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-static void		free_matrix(int ***m)
+static void		free_matrix1(int ***m)
 {
 	int		i;
 	int		j;
@@ -24,7 +24,20 @@ static void		free_matrix(int ***m)
 	m = NULL;
 }
 
-static int		***alloc_matrix(void)
+static void		free_matrix2(int **m)
+{
+	int		i = 0;
+
+	while (i < 6)
+	{
+		free(m[i]);
+		i++;
+	}
+	free(m);
+	m = NULL;
+}
+
+static int		***alloc_matrix1(void)
 {
 	int		***matrix;
 	int		i = 0;
@@ -40,6 +53,20 @@ static int		***alloc_matrix(void)
 			matrix[i][j] = (int *)malloc(sizeof(int) * 6);
 			j++;
 		}
+		i++;
+	}
+	return(matrix);
+}
+
+static int		**alloc_matrix2(void)
+{
+	int		**matrix;
+	int		i = 0;
+
+	matrix = (int **)malloc(sizeof(int *) * 6);
+	while (i < 6)
+	{
+		matrix[i] = (int *)malloc(sizeof(int) * 6);
 		i++;
 	}
 	return(matrix);
@@ -97,7 +124,7 @@ static int		***parse_data(int fd, char *line)
 	int 		c_t = 0;
 	int		dim = 0;
 
-	matrix = alloc_matrix();
+	matrix = alloc_matrix1();
 	while ((get_next_line(fd, &line)))
 	{
 		line_c = 0;
@@ -143,6 +170,7 @@ int		main(int argc, char **argv)
 	int		fd;
 	char		*line;
 	int		***decimals;
+	int		**mean;
 	int		mode = 1;
 
 	if (argc < 2)
@@ -167,7 +195,10 @@ int		main(int argc, char **argv)
 		printf("Failed to open the file for reading\n");
 		exit(0);
 	}
-	decimals = parse_data(fd, line);
+
+	decimals = parse_data(fd, line); //-----------------
+	
+	mean = alloc_matrix2();
 
 	for (int c = 0; c < 6; c++)
 	{
@@ -180,7 +211,8 @@ int		main(int argc, char **argv)
 		}
 	}
 
-	free_matrix(decimals);
+	free_matrix2(mean);
+	free_matrix1(decimals);
 	close(fd);
 	return(0);
 }
