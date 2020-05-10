@@ -94,7 +94,6 @@ static int		***parse_data(int fd, char *line)
 	int		***matrix;
 	int		nbr;
 
-	int		counter = 0;
 	int 		c_t = 0;
 	int		dim = 0;
 
@@ -127,12 +126,9 @@ static int		***parse_data(int fd, char *line)
 				dim++;
 			}
 			fill_matrix(matrix[dim], nbr, c_t);
-
 			free(bin);
 			free(tmp);
 			line_c += 12;
-
-			counter++;
 			c_t++;
 		}
 		free(line);
@@ -147,10 +143,30 @@ int		main(int argc, char **argv)
 	int		fd;
 	char		*line;
 	int		***decimals;
+	int		mode = 1;
 
-	if (argc != 2)
+	if (argc < 2)
+	{
+		printf("No input file selected\n");
 		exit(0);
-	fd = open(argv[1], O_RDONLY);
+	}
+	else if (argc > 3)
+	{
+		printf("Too many arguments given\n");
+		exit(0);
+	}
+	if (argc == 3 && (!ft_strcmp(argv[2], "mean")))
+		mode = 2;
+	else if (argc == 3 && (ft_strcmp(argv[2], "mean")))
+	{
+		printf("Only \"mean\" can be used as a parameter\n");
+		exit(0);
+	}
+	if ((fd = open(argv[1], O_RDONLY)) < 0)
+	{
+		printf("Failed to open the file for reading\n");
+		exit(0);
+	}
 	decimals = parse_data(fd, line);
 
 	for (int c = 0; c < 6; c++)
