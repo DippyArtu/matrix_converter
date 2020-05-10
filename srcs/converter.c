@@ -51,6 +51,8 @@ static int		***alloc_matrix1(void)
 		while (j < 6)
 		{
 			matrix[i][j] = (int *)malloc(sizeof(int) * 6);
+			for (int n = 0; n < 6; n++)
+				matrix[i][j][n] = 0;
 			j++;
 		}
 		i++;
@@ -67,6 +69,8 @@ static int		**alloc_matrix2(void)
 	while (i < 6)
 	{
 		matrix[i] = (int *)malloc(sizeof(int) * 6);
+		for (int n = 0; n < 6; n++)
+			matrix[i][n] = 0;
 		i++;
 	}
 	return(matrix);
@@ -163,7 +167,44 @@ static int		***parse_data(int fd, char *line)
 	free(line);
 	line = NULL;
 	return(matrix);
-}	
+}
+
+static int	**find_mean(int	***matrix)
+{
+	int		**mean;
+	int		dim = 0;
+	int		row = 0;
+	int		col = 0;
+	int		i = 0;
+	int		j = 0;
+	int		res = 0;
+
+	mean = alloc_matrix2();
+	while (col < 6)
+	{
+		dim = 0;
+		row = 0;
+		res = 0;
+		j = 0;	
+		while (row < 6)
+		{
+			dim = 0;
+			res = 0;
+			while (dim < 6)
+			{
+				res += matrix[dim][col][row];
+				dim++;
+			}
+			res /= 6;
+			mean[i][j] = res;
+			row++;
+			j++;
+		}
+		col++;
+		i++;
+	}
+	return(mean);
+}
 
 int		main(int argc, char **argv)
 {
@@ -173,6 +214,8 @@ int		main(int argc, char **argv)
 	int		**mean;
 	int		mode = 1;
 
+	decimals = NULL;
+	mean = NULL;
 	if (argc < 2)
 	{
 		printf("No input file selected\n");
@@ -195,10 +238,7 @@ int		main(int argc, char **argv)
 		printf("Failed to open the file for reading\n");
 		exit(0);
 	}
-
 	decimals = parse_data(fd, line); //-----------------
-	
-	mean = alloc_matrix2();
 
 	for (int c = 0; c < 6; c++)
 	{
@@ -211,7 +251,23 @@ int		main(int argc, char **argv)
 		}
 	}
 
-	free_matrix2(mean);
+	if (mode == 2)
+	{
+		mean = find_mean(decimals);
+	}
+	
+	printf("\n\n");
+	for (int c = 0; c < 6; c++)
+	{
+		printf("\n");
+		for (int i = 0; i < 6; i++)
+		{
+			printf("%i ", mean[c][i]);
+		}
+	}
+
+	free_matrix2(mean);//-----------------
+	
 	free_matrix1(decimals);
 	close(fd);
 	return(0);
