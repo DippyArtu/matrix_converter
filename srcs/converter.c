@@ -206,9 +206,47 @@ static int	**find_mean(int	***matrix)
 	return(mean);
 }
 
+static void	print_result(int fd, int ***matrix)
+{
+	for (int c = 0; c < 6; c++)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			ft_putchar_fd('\n', fd);
+			for (int j = 0; j < 6; j++)
+			{
+				ft_putnbr_fd(matrix[c][i][j], fd);
+				ft_putchar_fd(' ', fd);
+				if (matrix[c][i][j] < 10 && matrix[c][i][j] > -10)
+					ft_putchar_fd(' ', fd);
+			}
+		}
+		ft_putchar_fd('\n', fd);
+		ft_putchar_fd('\n', fd);
+	}
+}
+
+static void	print_result_mean(int fd, int **matrix)
+{
+	ft_putchar_fd('\n', fd);
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			ft_putnbr_fd(matrix[i][j], fd);
+			ft_putchar_fd(' ', fd);
+			if (matrix[i][j] < 10 && matrix[i][j] > -10)
+				ft_putchar_fd(' ', fd);
+		}
+		ft_putchar_fd('\n', fd);
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	int		fd;
+	int		fd_result;
+	int		fd_result_mean;
 	char		*line;
 	int		***decimals;
 	int		**mean;
@@ -238,37 +276,27 @@ int		main(int argc, char **argv)
 		printf("Failed to open the file for reading\n");
 		exit(0);
 	}
-	decimals = parse_data(fd, line); //-----------------
-
-	for (int c = 0; c < 6; c++)
+	decimals = parse_data(fd, line);
+	close(fd);
+	if (mode == 1)
 	{
-		printf("\n\n");
-		for (int i = 0; i < 6; i++)
-		{
-			printf("\n");
-			for (int j = 0; j < 6; j++)
-				printf("%i ", decimals[c][i][j]);
-		}
+		fd_result = open("result.txt", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR); 
+		print_result(fd_result, decimals);
+		free_matrix1(decimals);
+		close(fd_result);
+		printf("Done\n");
+		return(0);
 	}
-
-	if (mode == 2)
+	else if (mode == 2)
 	{
 		mean = find_mean(decimals);
+		fd_result_mean = open("result_mean.txt", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+		print_result_mean(fd_result_mean, mean);
+		free_matrix1(decimals);
+		free_matrix2(mean);
+		close(fd_result_mean);
+		printf("Done\n");
+		return(0);
 	}
-	
-	printf("\n\n");
-	for (int c = 0; c < 6; c++)
-	{
-		printf("\n");
-		for (int i = 0; i < 6; i++)
-		{
-			printf("%i ", mean[c][i]);
-		}
-	}
-
-	free_matrix2(mean);//-----------------
-	
-	free_matrix1(decimals);
-	close(fd);
 	return(0);
 }

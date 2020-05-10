@@ -30,7 +30,7 @@ res[i][j] = ((in[n][i][1] + .... + in[n][i][6]) / 6)					//mean value
 <p>Results will be written into the <em>result.txt</em> file</p>
 </li>
 <li>
-<p>Results with the <code>mean</code> parameter will be writter into the <em>results_mean.txt</em> file</p>
+<p>Results with the <code>mean</code> parameter will be writter into the <em>result_mean.txt</em> file</p>
 </li>
 </ul>
 <h3 id="p.s.">P.S.</h3>
