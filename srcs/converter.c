@@ -8,11 +8,17 @@ static void		free_matrix(int ***m)
 	int		i;
 	int		j;
 
-	for (i = 0; i < 6; i++)
+	i = 0;
+	while (i < 6)
 	{
-		for (j = 0; j < 6; j++)
+		j = 0;
+		while (j < 6)
+		{
 			free(m[i][j]);
+			j++;
+		}
 		free(m[i]);
+		i++;
 	}
 	free(m);
 	m = NULL;
@@ -25,11 +31,11 @@ static int		***alloc_matrix(void)
 	int		j = 0;
 
 	matrix = (int ***)malloc(sizeof(int **) * 6);
-	while (i < 7)
+	while (i < 6)
 	{
 		matrix[i] = (int **)malloc(sizeof(int *) * 6);
 		j = 0;
-		while (j < 7)
+		while (j < 6)
 		{
 			matrix[i][j] = (int *)malloc(sizeof(int) * 6);
 			j++;
