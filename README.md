@@ -10,6 +10,7 @@
 <pre><code>Clarification:            					//for 6 6*6 matrices
 
 
+
 res -- resulting matrix						//2d matrix
 in --  input array of matrices					//3d matrix
 
