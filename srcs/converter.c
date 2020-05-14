@@ -242,14 +242,77 @@ static void	print_result_mean(int fd, int **matrix)
 	}
 }
 
+static int		*get_distrib(int fd, char *line)
+{
+
+	int		*result;
+	int		counter = 0;
+	int		nbr = 0;
+	int		i;
+	int		r_i = 0;
+
+	int	check = 0;
+
+	result = (int *)malloc(sizeof(int) * 42);
+	while ((get_next_line(fd, &line)))
+	{
+		i = 0;
+		while (line[i])
+		{
+			if (line[i] == 48 || line[i] == 49)
+			{
+				if (line[i] == 49)
+					nbr++;
+				counter++;
+			}
+			if (counter == 30)
+			{
+				result[r_i] = nbr;
+				check++;
+				nbr = 0;
+				counter = 0;
+				r_i++;
+			}
+			if (r_i == 43)
+				break;
+			i++;
+		}
+		free(line);
+	}
+	free(line);
+	line = NULL;
+	return(result);
+}
+
+static void	print_result_distrib(int fd, int *numbers) //--------------------
+{
+	int		tmp;
+	int		index = 0;
+
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			ft_putnbr_fd(numbers[index], fd);
+			if ((tmp = j + 1) < 7)
+				ft_putchar_fd(' ', fd);
+			index++;
+		}
+		if ((tmp = i + 1) < 6)
+			ft_putchar_fd('\n', fd);
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	int		fd;
 	int		fd_result;
 	int		fd_result_mean;
+	int		fd_result_distrib;
 	char		*line;
 	int		***decimals;
 	int		**mean;
+	int		*distrib;
 	int		mode = 1;
 
 	decimals = NULL;
@@ -266,9 +329,11 @@ int		main(int argc, char **argv)
 	}
 	if (argc == 3 && (!ft_strcmp(argv[2], "mean")))
 		mode = 2;
+	else if (argc == 3 && (!ft_strcmp(argv[2], "distrib")))
+		mode = 3;
 	else if (argc == 3 && (ft_strcmp(argv[2], "mean")))
 	{
-		printf("Only \"mean\" can be used as a parameter\n");
+		printf("Only \"mean\" or \"distrib\" can be used as a parameter\n");
 		exit(0);
 	}
 	if ((fd = open(argv[1], O_RDONLY)) < 0)
@@ -276,25 +341,38 @@ int		main(int argc, char **argv)
 		printf("Failed to open the file for reading\n");
 		exit(0);
 	}
-	decimals = parse_data(fd, line);
-	close(fd);
 	if (mode == 1)
 	{
-		fd_result = open("result.txt", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR); 
+		fd_result = open("result.txt", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+		decimals = parse_data(fd, line);
 		print_result(fd_result, decimals);
 		free_matrix1(decimals);
+		close(fd);
 		close(fd_result);
 		printf("Done\n");
 		return(0);
 	}
 	else if (mode == 2)
 	{
+		decimals = parse_data(fd, line);
 		mean = find_mean(decimals);
 		fd_result_mean = open("result_mean.txt", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 		print_result_mean(fd_result_mean, mean);
 		free_matrix1(decimals);
 		free_matrix2(mean);
+		close(fd);
 		close(fd_result_mean);
+		printf("Done\n");
+		return(0);
+	}
+	else if (mode == 3)
+	{
+		fd_result_distrib = open("result_distrib.fdf", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
+		distrib = get_distrib(fd, line);
+		print_result_distrib(fd_result_distrib, distrib);
+		close(fd);
+		close(fd_result_distrib);
+		free(distrib);
 		printf("Done\n");
 		return(0);
 	}

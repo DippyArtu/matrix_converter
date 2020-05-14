@@ -71,5 +71,4 @@ Would yield a resulting:
 <p>Apart from basic argument error checking, there isn’t a proper error handling system (file content, map validity etc.), so if the program crashes, you have most likely supplied an incorrect input matrix.</p>
 </li>
 </ul>
-<p>goodnote</p>
 
